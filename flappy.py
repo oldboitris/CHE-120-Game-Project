@@ -3,7 +3,7 @@ from pygame.locals import *
 
 #VARIABLES
 SCREEN_WIDHT = 400 #screen width 
-SCREEN_HEIGHT = 600
+SCREEN_HEIGHT = 600 #screen height
 SPEED = 20
 GRAVITY = 2.5
 GAME_SPEED = 15
