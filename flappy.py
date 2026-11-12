@@ -9,7 +9,7 @@ GRAVITY = 2.5
 GAME_SPEED = 15
 
 GROUND_WIDTH = 2 * SCREEN_WIDTH
-GROUND_HEIGHT= 100
+GROUND_HEIGHT= 100 
 
 PIPE_WIDTH = 80
 PIPE_HEIGHT = 500
@@ -22,7 +22,7 @@ hit = 'assets/audio/hit.wav'
 pygame.mixer.init()
 
 
-class Bird(pygame.sprite.Sprite):
+class Bird(pygame.sprite.Sprite): #loads preexisting sprite graphic from pygame to uase as the bird
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -30,12 +30,12 @@ class Bird(pygame.sprite.Sprite):
         self.images =  [pygame.image.load('assets/sprites/bluebird-upflap.png').convert_alpha(),
                         pygame.image.load('assets/sprites/bluebird-midflap.png').convert_alpha(),
                         pygame.image.load('assets/sprites/bluebird-downflap.png').convert_alpha()]
-
+#loads graphics for the wing flap of the bird
         self.speed = SPEED
 
         self.current_image = 0
         self.image = pygame.image.load('assets/sprites/bluebird-upflap.png').convert_alpha()
-        self.mask = pygame.mask.from_surface(self.image)
+        self.mask = pygame.mask.from_surface(self.image) 
 
         self.rect = self.image.get_rect()
         self.rect[0] = SCREEN_WIDTH / 6
