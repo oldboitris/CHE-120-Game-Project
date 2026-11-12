@@ -2,7 +2,7 @@ import pygame, random, time
 from pygame.locals import *
 
 #VARIABLES
-SCREEN_WIDHT = 400
+SCREEN_WIDHT = 400 #screen width 
 SCREEN_HEIGHT = 600
 SPEED = 20
 GRAVITY = 2.5
