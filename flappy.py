@@ -1,11 +1,11 @@
-import pygame, random, time
+import pygame, random, time #Katherine Elvidge(KE) Kiana Alenabi Amlashi(KA) Mohammed Ibrahim Rashaed(MR) Tristan Yong Keng Chay(TC)
 from pygame.locals import *
 
 #VARIABLES
 SCREEN_WIDHT = 400 #screen width 
 SCREEN_HEIGHT = 600 #screen height
-SPEED = 20
-GRAVITY = 2.5
+SPEED = 20 #speed of the bird
+GRAVITY = 2.5 
 GAME_SPEED = 15
 
 GROUND_WIDHT = 2 * SCREEN_WIDHT
