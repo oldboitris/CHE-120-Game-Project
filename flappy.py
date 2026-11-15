@@ -1,12 +1,13 @@
-import pygame, random, time #Katherine Elvidge(KE) Kiana Alenabi Amlashi(KA) Mohammed Ibrahim Rashaed(MR) Tristan Yong Keng Chay(TC)
+#Katherine Elvidge(KE) Kiana Alenabi Amlashi(KA) Mohammed Ibrahim Rashaed(MR) Tristan Yong Keng Chay(TC)
+import pygame, random, time 
 from pygame.locals import *
 
 #VARIABLES
-SCREEN_WIDTH = 400 #screen width 
-SCREEN_HEIGHT = 600 #screen height
-SPEED = 20 #speed of the bird
-GRAVITY = 2.5 
-GAME_SPEED = 15
+SCREEN_WIDTH = 400 #setting screen width to 400 pixels (KE) (KA) (MR) (TC)
+SCREEN_HEIGHT = 600 #setting screen height to 400 pixels (KE) (KA) (MR) (TC)
+SPEED = 20 #the speed of the bird's jump (upwards), every time the user taps, pixels per frame (KE) (KA) (MR) (TC)
+GRAVITY = 2.5 #the acceleration of falling, every second the speed downwards increases by 2.5 pixels per frame (KE) (KA) (MR) (TC)
+GAME_SPEED = 15 #the ground, pipes, map moves from right to left at 15 pixels per frame (KE) (KA) (MR) (TC)
 
 GROUND_WIDTH = 2 * SCREEN_WIDTH
 GROUND_HEIGHT= 100 
