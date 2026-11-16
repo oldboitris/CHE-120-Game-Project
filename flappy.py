@@ -48,43 +48,52 @@ class Bird(pygame.sprite.Sprite): #loads preexisting sprite graphic from pygame 
         self.speed += GRAVITY #adds gravity to bird's vertical speed, in the game, down is positive, line 9 defined acc due to g as 2.5 pixels/frame. (TC)
 
         #UPDATE HEIGHT
-        self.rect[1] += self.speed #changes bird's vertical position by its current speed (positive is down so Bird is falling due to gravity). 
+        self.rect[1] += self.speed #changes bird's vertical position by its current speed (positive is down so Bird is falling due to gravity). (TC)
 
-    def bump(self): #defines what happens when bird flaps. 
+    def bump(self): #defines what happens when bird flaps. (TC)
         self.speed = -SPEED #gives bird a negative vertical speed (negative is up) so this is bird's jump when player taps. (TC)
 
-    def begin(self): #begin defines the bird's starting animation. 
-        self.current_image = (self.current_image + 1) % 3 #like ln 46, cycles display of bird through 3 images. 
-        self.image = self.images[self.current_image] #displays the newly selected image. 
+    def begin(self): #begin defines the bird's starting animation. (TC)
+        self.current_image = (self.current_image + 1) % 3 #like ln 46, cycles display of bird through 3 images. (TC)
+        self.image = self.images[self.current_image] #displays the newly selected image. (TC)
+"""In sum, ln 26 defines Bird as a Pygame sprite. 
+ln 28 _init_ sets up a new bird, it loads the three flap images (upflap, midflap, downflap), sets the starting speeds (jump) and images, 
+and sets up bird's collision shape and position (rectangular hitbox).
+ln 45 update(self) cycles through the images we loaded in ln 28, adds gravity to bird's speed, and moves bird vertically.
+ln 53 bump(self) gives flap a negative (up) speed when player clicks Space or Up. (ln 28 sets speed, ln 53 assigns jump speed to click) 
+ln 56 begin(self) cycles bird's pictures on start screen. But bird not moving, just start screen animation. (TC)
+"""
+
+class Pipe(pygame.sprite.Sprite): #Pipe is defined as a Pygame sprite again, we'll define Pipe behavior here. (TC)
+
+    def __init__(self, inverted, xpos, ysize): #a method is defined using these 4 pieces of info. (TC)
+        #self means pipe being created. inverted takes True/False for whether pipe is inverted (since we need 2 pipes with opening)
+        #xpos is pipe's horizontal position on screen. ysize is pipe's position vertically. (TC)
+        pygame.sprite.Sprite.__init__(self) #the pipe is a sprite. (TC)
+
+        self. image = pygame.image.load('assets/sprites/pipe-green.png').convert_alpha() #loads image pipe-green.png stored in assets/sprites. convert_alpha just beautifies with transparency. (TC)
+        self.image = pygame.transform.scale(self.image, (PIPE_WIDTH, PIPE_HEIGHT)) #resizes image of pipe variables initialized in ln 6 and 7. (TC)
 
 
+        self.rect = self.image.get_rect() #creatses rectangle around image, rectangle's x and y values refer to top left edge. 
+        self.rect[0] = xpos #the rectangle's horizontal position is set to xpos (3rd argument) (TC)
 
-
-class Pipe(pygame.sprite.Sprite):
-
-    def __init__(self, inverted, xpos, ysize):
-        pygame.sprite.Sprite.__init__(self)
-
-        self. image = pygame.image.load('assets/sprites/pipe-green.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (PIPE_WIDTH, PIPE_HEIGHT))
-
-
-        self.rect = self.image.get_rect()
-        self.rect[0] = xpos
-
-        if inverted:
-            self.image = pygame.transform.flip(self.image, False, True)
-            self.rect[1] = - (self.rect[3] - ysize)
+        if inverted: #this conditional changes how pipe looks if inverted, we will flip it upside-down. (TC)
+            self.image = pygame.transform.flip(self.image, False, True) #flip(bird'simage, don't flip left to right, True flip top to bottom). (TC)
+            self.rect[1] = - (self.rect[3] - ysize) #self.rect[3] #self.rect[3] is 500 pixels (PIPE_HEIGHT in ln 16), ysize gives position (negative puts pipe above visible screen to make gap). (TC)
         else:
-            self.rect[1] = SCREEN_HEIGHT - ysize
+            self.rect[1] = SCREEN_HEIGHT - ysize #else (if pipe is upright), then some of pipe is below visible screen. (TC)
 
 
-        self.mask = pygame.mask.from_surface(self.image)
+        self.mask = pygame.mask.from_surface(self.image) #creates rectangular collision box around pipe image. Bird's mask collides with pipe's mask. (TC)
 
 
-    def update(self):
-        self.rect[0] -= GAME_SPEED
-
+    def update(self): #defines updates to pipe, pipe needs to move. (TC)
+        self.rect[0] -= GAME_SPEED #moves pipe left by game_speed pixels each update. 
+"""
+This class defines Pipe as a Pygame sprite. It can be positioned as a top (inverted) or bottom pipe,
+and the pipe moves left during the game, remember the bird's speed is only defined vertically (gravity and jump). 
+"""
         
 
 class Ground(pygame.sprite.Sprite):
