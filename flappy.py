@@ -1,61 +1,61 @@
 #Katherine Elvidge(KE) Kiana Alenabi Amlashi(KA) Mohammed Ibrahim Rashaed(MR) Tristan Yong Keng Chay(TC)
-import pygame, random, time 
-from pygame.locals import *
+import pygame, random, time #importing python packages, pygame, random, time which gives us functions to work with. (TC)
+from pygame.locals import * #further imports constant variables from pygame, like QUIT (to close game), KEYDOWN, K_SPACE, K_UP. (TC)
 
 #VARIABLES
 SCREEN_WIDTH = 400 #setting screen width to 400 pixels (KE) (KA) (MR) (TC)
 SCREEN_HEIGHT = 600 #setting screen height to 400 pixels (KE) (KA) (MR) (TC)
-SPEED = 20 #the speed of the bird's jump (upwards), every time the user taps, pixels per frame (KE) (KA) (MR) (TC)
+SPEED = 20 #the speed of the bird's jump in pixels per frame  (upwards), only when the user taps (KE) (KA) (MR) (TC)
 GRAVITY = 2.5 #the acceleration of falling, every second the speed downwards increases by 2.5 pixels per frame (KE) (KA) (MR) (TC)
 GAME_SPEED = 15 #the ground, pipes, map moves from right to left at 15 pixels per frame (KE) (KA) (MR) (TC)
 
-GROUND_WIDTH = 2 * SCREEN_WIDTH
-GROUND_HEIGHT= 100 
+GROUND_WIDTH = 2 * SCREEN_WIDTH #ground is double screen width so that animations flow seamlessly rather than having random gaps. (TC)
+GROUND_HEIGHT= 100 #sets the ground to be placed at 100 pixels, since the ground in game needs to be on-screen. (TC)
 
-PIPE_WIDTH = 80
+PIPE_WIDTH = 80 
 PIPE_HEIGHT = 500
 
 PIPE_GAP = 150
+#sets dimensions for the pipes (TC)
+wing = 'assets/audio/wing.wav' 
+hit = 'assets/audio/hit.wav' 
+#createa and initializes variables wing and hit, will play these audio files in folders assets -> audio (we gotta have these folders too) (TC)
+pygame.mixer.init() #initializes Pygame's audio mixer to play audio files. (TC)
 
-wing = 'assets/audio/wing.wav'
-hit = 'assets/audio/hit.wav'
-
-pygame.mixer.init()
-
-
-class Bird(pygame.sprite.Sprite): #loads preexisting sprite graphic from pygame to uase as the bird
-
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-
-        self.images =  [pygame.image.load('assets/sprites/bluebird-upflap.png').convert_alpha(),
+#a sprite is a 2D graphical object that represents a moving or interactive element of a game - bird, coins, pipes. (TC)
+class Bird(pygame.sprite.Sprite): #loads preexisting sprite graphic from pygame to use as the bird
+#the code above defines Bird as a Pygame sprite. Now Bird has sprite behavior: it can be grouped, drawn, updated. (TC)
+    def __init__(self): #defines a new method that sets up a new bird (start a new game), this function will give it a starting speed, position. (TC)
+        pygame.sprite.Sprite.__init__(self) #initializes Bird so that Pygame gives it attributes of a sprite. (TC)
+# self is used to say that updates and any new addition affects the bird. (TC)
+        self.images =  [pygame.image.load('assets/sprites/bluebird-upflap.png').convert_alpha(), #the .convert_alpha() converts each image to a format suitable for displaying with transparency rather than a solid black background. (TC)
                         pygame.image.load('assets/sprites/bluebird-midflap.png').convert_alpha(),
-                        pygame.image.load('assets/sprites/bluebird-downflap.png').convert_alpha()]
+                        pygame.image.load('assets/sprites/bluebird-downflap.png').convert_alpha()] #these three images are loaded and attributed to self (Bird) so that it can actually flap in game. (TC)
 #loads graphics for the wing flap of the bird
-        self.speed = SPEED
+        self.speed = SPEED #sets the bird's vertical speed, from every jump, in pixels per frame (TC)
 
-        self.current_image = 0
-        self.image = pygame.image.load('assets/sprites/bluebird-upflap.png').convert_alpha()
-        self.mask = pygame.mask.from_surface(self.image) 
+        self.current_image = 0 #the starting image of Bird is image 0, or up_flap.(TC)
+        self.image = pygame.image.load('assets/sprites/bluebird-upflap.png').convert_alpha() #open the image of bird up-flap, convert alpha makes adjusts transparency to fit background (pretty graphics). (TC) 
+        self.mask = pygame.mask.from_surface(self.image) #makes a pixel-based collision image, so that it follows the shape of bird rather than a rectangular hitbox. (TC)
 
-        self.rect = self.image.get_rect()
-        self.rect[0] = SCREEN_WIDTH / 6
-        self.rect[1] = SCREEN_HEIGHT / 2
+        self.rect = self.image.get_rect() #creates a rectangular size around the bird, and the bird's position. (TC)
+        self.rect[0] = SCREEN_WIDTH / 6 #places the bird at 1/6 of screen width. (TC)
+        self.rect[1] = SCREEN_HEIGHT / 2 #places bird at 1/2 of screen height. (TC)
 
-    def update(self):
-        self.current_image = (self.current_image + 1) % 3
-        self.image = self.images[self.current_image]
-        self.speed += GRAVITY
+    def update(self): #_init_ above gives Bird starting attributes, this defines a new action for Bird. (TC)
+        self.current_image = (self.current_image + 1) % 3 #every tap the bird will have different animations, this line cycles to the next image (+1), %3 means remain between 0 and 2, so we always cycle between up-, mid-, down-flap images. (TC)
+        self.image = self.images[self.current_image] #display the bird's image on screen to whichever stage of flight we're in, defined by indexing in the line above. (TC)
+        self.speed += GRAVITY #adds gravity to bird's vertical speed, in the game, down is positive, line 9 defined acc due to g as 2.5 pixels/frame. (TC)
 
         #UPDATE HEIGHT
-        self.rect[1] += self.speed
+        self.rect[1] += self.speed #changes bird's vertical position by its current speed (positive is down so Bird is falling due to gravity). 
 
-    def bump(self):
-        self.speed = -SPEED
+    def bump(self): #defines what happens when bird flaps. 
+        self.speed = -SPEED #gives bird a negative vertical speed (negative is up) so this is bird's jump when player taps. (TC)
 
-    def begin(self):
-        self.current_image = (self.current_image + 1) % 3
-        self.image = self.images[self.current_image]
+    def begin(self): #begin defines the bird's starting animation. 
+        self.current_image = (self.current_image + 1) % 3 #like ln 46, cycles display of bird through 3 images. 
+        self.image = self.images[self.current_image] #displays the newly selected image. 
 
 
 
