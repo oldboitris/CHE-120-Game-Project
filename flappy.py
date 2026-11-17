@@ -85,7 +85,7 @@ class Pipe(pygame.sprite.Sprite): #Pipe is defined as a Pygame sprite again, we'
             self.rect[1] = SCREEN_HEIGHT - ysize #else (if pipe is upright), then some of pipe is below visible screen. (TC)
 
 
-        self.mask = pygame.mask.from_surface(self.image) #creates rectangular collision box around pipe image. Bird's mask collides with pipe's mask. (TC)
+        self.mask = pygame.mask.from_surface(self.image) #creates pixel-based collision box around pipe image. Bird's mask collides with pipe's mask. (TC)
 
 
     def update(self): #defines updates to pipe, pipe needs to move. (TC)
@@ -96,29 +96,34 @@ and the pipe moves left during the game, remember the bird's speed is only defin
 """
         
 
-class Ground(pygame.sprite.Sprite):
+class Ground(pygame.sprite.Sprite): #The ground is created as a sprite, since it needs to interact with bird.
     
-    def __init__(self, xpos):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('assets/sprites/base.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (GROUND_WIDTH, GROUND_HEIGHT))
+    def __init__(self, xpos): #initializing the ground and its starting position (ground will be moving)
+        pygame.sprite.Sprite.__init__(self) # again, ground is a sprite
+        self.image = pygame.image.load('assets/sprites/base.png').convert_alpha() #load the image base.png in folders: assets -> sprites, convert_alpha makes it transparent and fit in.
+        self.image = pygame.transform.scale(self.image, (GROUND_WIDTH, GROUND_HEIGHT)) #scale the photo to fit the sizes (in pixels) 800 by 100, ln 6 & ln 7. The ground is double the width of screen so it scrolls smoothly.
+        self.mask = pygame.mask.from_surface(self.image) #generates a mask (hitbox) around the ground so it can interact with bird.
 
-        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect() #generates a rectangle around ground
+        self.rect[0] = xpos #left edge of ground's rectangle put set to xpos.
+        self.rect[1] = SCREEN_HEIGHT - GROUND_HEIGHT #screen height = 600, ground height = 100, ground occupies the bottom rows of pixels 500-599. 
+    def update(self): #when ground is updated
+        self.rect[0] -= GAME_SPEED #move ground left by 15 pixels, the code will remove ground off-screen and generate another one so that the map scrolls. 
+"""
+Ground is created and scaled, then it is given a collision box, and set in position. 
+When ground is updated it starts moving right to left at 15 pixels, the code will later remove the ground that is off-screen and generate new ones on the right.
+"""
 
-        self.rect = self.image.get_rect()
-        self.rect[0] = xpos
-        self.rect[1] = SCREEN_HEIGHT - GROUND_HEIGHT
-    def update(self):
-        self.rect[0] -= GAME_SPEED
+def is_off_screen(sprite): #creates function, this checks if a sprite moved completely off the left side of the screen.
+    return sprite.rect[0] < -(sprite.rect[2]) #sprite.rect[0] is the sprite’s left-edge x-coordinate.
+    #sprite.rect[2] is the rectangle’s width.
+    #this function returns a Boolean, this is False only until the left edge is completely past the screen, then this returns True.
 
-def is_off_screen(sprite):
-    return sprite.rect[0] < -(sprite.rect[2])
-
-def get_random_pipes(xpos):
-    size = random.randint(100, 300)
-    pipe = Pipe(False, xpos, size)
-    pipe_inverted = Pipe(True, xpos, SCREEN_HEIGHT - size - PIPE_GAP)
-    return pipe, pipe_inverted
+def get_random_pipes(xpos): #function that creates pair of pipes at horizontal position xpos.
+    size = random.randint(100, 300) #uses randomizer to pick random number between 100-300 (for position), stores int in variable size.
+    pipe = Pipe(False, xpos, size) #creates bottom pipe, False means don't invert, xpos for horizontal position, size for vertical position.
+    pipe_inverted = Pipe(True, xpos, SCREEN_HEIGHT - size - PIPE_GAP) #creates top pipe at same horizontal position, True means invert. Calculation leaves a gap (for the bird to fly through). 
+    return pipe, pipe_inverted #returns both the bottom and top pipe. 
 
 
 pygame.init()
