@@ -126,22 +126,23 @@ def get_random_pipes(xpos): #function that creates pair of pipes at horizontal p
     return pipe, pipe_inverted #returns both the bottom and top pipe. 
 
 
-pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('Flappy Bird')
+pygame.init() #starts Pygame, graphics, keyboard input, timing.
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)) #Creates game window with the sizes 400 wide by 600 tall. variable screen is where Pygame will draw everything.
+pygame.display.set_caption('Flappy Bird') #creates title text shown at top of game window. 
 
-BACKGROUND = pygame.image.load('assets/sprites/background-day.png')
-BACKGROUND = pygame.transform.scale(BACKGROUND, (SCREEN_WIDTH, SCREEN_HEIGHT))
-BEGIN_IMAGE = pygame.image.load('assets/sprites/message.png').convert_alpha()
+BACKGROUND = pygame.image.load('assets/sprites/background-day.png') #loads background-day.png image from folder assets -> sprites.
+BACKGROUND = pygame.transform.scale(BACKGROUND, (SCREEN_WIDTH, SCREEN_HEIGHT)) #resizes the loaded photo to fit screen size.
+BEGIN_IMAGE = pygame.image.load('assets/sprites/message.png').convert_alpha() #loads image message.png with starting message. 
 
-bird_group = pygame.sprite.Group()
-bird = Bird()
-bird_group.add(bird)
+bird_group = pygame.sprite.Group() #creates a Pygame group to hold the bird.
+bird = Bird() #creates a bird by calling the Class Bird we made in line 26.
+bird_group.add(bird) #adds the bird to the bird group, this let's Pygame update it and draw it through the group. 
+#seems redundant to make a group to hold bird, but this allows Pygame to use group-based collision tools for bird with pipes and ground.
 
-ground_group = pygame.sprite.Group()
+ground_group = pygame.sprite.Group() #creates sprite group for ground sections.
 
-for i in range (2):
-    ground = Ground(GROUND_WIDTH * i)
+for i in range (2): #this will run the code TWICE, i=0 and i=1. 
+    ground = Ground(GROUND_WIDTH * i) 
     ground_group.add(ground)
 
 pipe_group = pygame.sprite.Group()
