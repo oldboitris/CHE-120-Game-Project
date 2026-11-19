@@ -145,9 +145,9 @@ for i in range (2): #this will run the code TWICE, i=0 and i=1.
     ground = Ground(GROUND_WIDTH * i) #two ground objects are created so that the ground scrolls continuously [KE]
     ground_group.add(ground) #The two ground objects are added to the ground group [KA]
 
-pipe_group = pygame.sprite.Group() 
+pipe_group = pygame.sprite.Group() #makes group of pipes that act as a sprite with several options for obstacles [KE]
 for i in range (2):
-    pipes = get_random_pipes(SCREEN_WIDTH * i + 800)
+    pipes = get_random_pipes(SCREEN_WIDTH * i + 800) #generates pipes in a random order as game progesses [KE]
     pipe_group.add(pipes[0])
     pipe_group.add(pipes[1])
 
