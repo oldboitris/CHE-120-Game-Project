@@ -142,10 +142,10 @@ bird_group.add(bird) #adds the bird to the bird group, this let's Pygame update 
 ground_group = pygame.sprite.Group() #creates sprite group for ground sections.
 
 for i in range (2): #this will run the code TWICE, i=0 and i=1. 
-    ground = Ground(GROUND_WIDTH * i) 
-    ground_group.add(ground)
+    ground = Ground(GROUND_WIDTH * i) #two ground objects are created so that the ground scrolls continuously
+    ground_group.add(ground) #The two ground objects are added to the ground group
 
-pipe_group = pygame.sprite.Group()
+pipe_group = pygame.sprite.Group() 
 for i in range (2):
     pipes = get_random_pipes(SCREEN_WIDTH * i + 800)
     pipe_group.add(pipes[0])
