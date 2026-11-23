@@ -14,8 +14,18 @@ GROUND_HEIGHT= 100
 PIPE_WIDTH = 80 
 PIPE_HEIGHT = 500
 
-PIPE_GAP = 150
-#sets dimensions for the pipes (TC)
+# A string list of top-to-bottom columns of pipes (indices 0 to 4)
+COLUMN_SPRITES = [
+    'assets/sprites/yellow-column.png',  # 0: Top
+    'assets/sprites/orange-column.png',  # 1
+    'assets/sprites/green-column.png',   # 2 These strings can be indexed
+    'assets/sprites/blue-column.png',    # 3
+    'assets/sprites/purple-column.png',  # 4: Bottom 
+]
+# Total number of colored sections in one full column, the variable NUM_SECTIONS equals 5.
+NUM_SECTIONS = len(COLUMN_SPRITES) #
+
+#removing PIPE_GAP since no more gap. 
 wing = 'assets/audio/wing.wav' 
 hit = 'assets/audio/hit.wav' 
 
@@ -54,44 +64,39 @@ class Bird(pygame.sprite.Sprite):
     def begin(self): 
         self.current_image = (self.current_image + 1) % 3 
         self.image = self.images[self.current_image]
-"""In sum, ln 26 defines Bird as a Pygame sprite. 
-ln 28 _init_ sets up a new bird, it loads the three flap images (upflap, midflap, downflap), sets the starting speeds (jump) and images, 
-and sets up bird's collision shape and position (rectangular hitbox).
-ln 45 update(self) cycles through the images we loaded in ln 28, adds gravity to bird's speed, and moves bird vertically.
-ln 53 bump(self) gives flap a negative (up) speed when player clicks Space or Up. (ln 28 sets speed, ln 53 assigns jump speed to click) 
-ln 56 begin(self) cycles bird's pictures on start screen. But bird not moving, just start screen animation. (TC)
-"""
+
 
 class Pipe(pygame.sprite.Sprite): 
 
-    def __init__(self, inverted, xpos, ysize): 
-        pygame.sprite.Sprite.__init__(self) 
-
-        self. image = pygame.image.load('assets/sprites/pipe-green.png').convert_alpha() 
-        self.image = pygame.transform.scale(self.image, (PIPE_WIDTH, PIPE_HEIGHT))
-
-
-        self.rect = self.image.get_rect() 
-        self.rect[0] = xpos 
-
-        if inverted: 
-            self.image = pygame.transform.flip(self.image, False, True) 
-            self.rect[1] = - (self.rect[3] - ysize) 
-        else:
-            self.rect[1] = SCREEN_HEIGHT - ysize 
-
-
-        self.mask = pygame.mask.from_surface(self.image) 
-
-
-    def update(self): 
-        self.rect[0] -= GAME_SPEED
-"""
-This class defines Pipe as a Pygame sprite. It can be positioned as a top (inverted) or bottom pipe,
-and the pipe moves left during the game, remember the bird's speed is only defined vertically (gravity and jump). 
-"""
+    def __init__(self, xpos, ypos, section_height, chosen_color): #init accepts 5 names, xpos ypos used to position pipe columns. 
+        pygame.sprite.Sprite.__init__(self) #code treats pipe (self) as a Sprite. 
         
+        #chosen_color is color of column, which is assigned to self using the method color_index, basically assigning color for collision comparison. 
+        self.color_index = chosen_color
 
+        # Step 1: Get the file path string from the list using the color number
+        image_path = COLUMN_SPRITES[chosen_color]
+
+        # Step 2: Load the image from the assets folder, use convert_alpha() to make transparent parts transparent and blend in. 
+        raw_image = pygame.image.load(image_path).convert_alpha()
+        
+        # Step 3: Resize the image to match the pipe width and this section's height. 
+        self.image = pygame.transform.scale(raw_image, (PIPE_WIDTH, section_height))
+
+        # Step 4: Set up the position of rect and place it at (xpos, ypos)
+        self.rect = self.image.get_rect()
+        self.rect[0] = xpos
+        self.rect[1] = ypos
+
+        # Step 5: Create the collision mask from the resized image
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def update(self):
+        # Move this column piece to the left at GAME_SPEED
+        self.rect[0] -= GAME_SPEED
+
+    
+        
 class Ground(pygame.sprite.Sprite): 
     
     def __init__(self, xpos): 
@@ -105,10 +110,7 @@ class Ground(pygame.sprite.Sprite):
         self.rect[1] = SCREEN_HEIGHT - GROUND_HEIGHT 
     def update(self): 
         self.rect[0] -= GAME_SPEED 
-"""
-Ground is created and scaled, then it is given a collision box, and set in position. 
-When ground is updated it starts moving right to left at 15 pixels, the code will later remove the ground that is off-screen and generate new ones on the right.
-"""
+
 
 def is_off_screen(sprite): 
     return sprite.rect[0] < -(sprite.rect[2]) 
