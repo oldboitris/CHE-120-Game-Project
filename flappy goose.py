@@ -22,20 +22,37 @@ hit = 'assets/audio/hit.wav'
 pygame.mixer.init() 
 
 #we want to define a new set of birds, where there is a sprite corresponding to each colour. we will do this by importing the sprite from the png, and take the specific coordinates of each sprite 
+#then we will randomly generate a colour each time the game starts and each time the bird passes the pipe
+#we want to make sure our new geese sprites are the right size for the game, so we adjust them to a target size
 class Bird(pygame.sprite.Sprite): 
 
     def __init__(self): # this makes the bird self spawn, we want to keep this
         pygame.sprite.Sprite.__init__(self) 
 
-        spritesheet = pygame.image.load('assets/sprites/
+        sheet = pygame.image.load('assets/sprites/texture.png').convert_alpha() #this loads the spritesheet file
+        
+       goose_coords_colours = {
+           "purple": (0, 0, 229, 307), #(x, y, width, height)
+           "blue": (0, 307, 223, 307), 
+           "yellow": (0, 614, 223, 307),
+           "green": (0, 921, 221, 307),
+           "orange": (0, 1228, 221, 307)
+       }
+        # set a target size to make them fit the flappy bird pipes
+        target_size = (35, 48)
 
-        self.images =  [pygame.image.load('assets/sprites/bluebird-upflap.png').convert_alpha(),
-                        pygame.image.load('assets/sprites/bluebird-midflap.png').convert_alpha(),
-                        pygame.image.load('assets/sprites/bluebird-downflap.png').convert_alpha()] 
+        #now we have everything set up to define our geese, so we make a dictionary to slice and resize the sprites
+        #
+        self.sprites = {
+            colour: pygame.transform.scale(sheet.subsurface(coords), #This first part takes coords, crops out the excess and shrinks it down to the target size
+            for colour, coords in goose_coords_colours.items() #this part is a loop that grabs each item (colour) and repeats the value transformation for each sprite
+        }
+        
         self.speed = SPEED
 
-        self.current_image = 0 
-        self.image = pygame.image.load('assets/sprites/bluebird-upflap.png').convert_alpha() 
+        #pick a random colour upon starting up the game by turning each item from the self.sprites into a list, then picks one name randomly
+        self.colour = random.choice(list(self.sprites.keys())) 
+        self.image = self.sprites[self.colour] #then this part takes that random choice to load up the corresponding image
         self.mask = pygame.mask.from_surface(self.image) 
 
         self.rect = self.image.get_rect() 
