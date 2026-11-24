@@ -21,7 +21,7 @@ hit = 'assets/audio/hit.wav'
 
 pygame.mixer.init() 
 
-
+#we want to define a new set of birds, where there is a sprite corresponding to each colour. we will do this by importing the sprite from the png, and take the specific coordinates of each sprite 
 class Bird(pygame.sprite.Sprite): 
 
     def __init__(self): 
