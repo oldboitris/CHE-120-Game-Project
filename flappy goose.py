@@ -24,8 +24,10 @@ pygame.mixer.init()
 #we want to define a new set of birds, where there is a sprite corresponding to each colour. we will do this by importing the sprite from the png, and take the specific coordinates of each sprite 
 class Bird(pygame.sprite.Sprite): 
 
-    def __init__(self): 
+    def __init__(self): # this makes the bird self spawn, we want to keep this
         pygame.sprite.Sprite.__init__(self) 
+
+        spritesheet = pygame.image.load('assets/sprites/
 
         self.images =  [pygame.image.load('assets/sprites/bluebird-upflap.png').convert_alpha(),
                         pygame.image.load('assets/sprites/bluebird-midflap.png').convert_alpha(),
