@@ -1,0 +1,135 @@
+{
+  "frames": {
+    "purple goose.jpeg": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 229,
+        "h": 307
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 229,
+        "h": 307
+      },
+      "sourceSize": {
+        "w": 229,
+        "h": 307
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "blue goose.jpeg": {
+      "frame": {
+        "x": 0,
+        "y": 307,
+        "w": 223,
+        "h": 307
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 223,
+        "h": 307
+      },
+      "sourceSize": {
+        "w": 223,
+        "h": 307
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "yellow goose.jpeg": {
+      "frame": {
+        "x": 0,
+        "y": 614,
+        "w": 223,
+        "h": 307
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 223,
+        "h": 307
+      },
+      "sourceSize": {
+        "w": 223,
+        "h": 307
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "green goose.jpeg": {
+      "frame": {
+        "x": 0,
+        "y": 921,
+        "w": 221,
+        "h": 307
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 221,
+        "h": 307
+      },
+      "sourceSize": {
+        "w": 221,
+        "h": 307
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "orange goose.jpeg": {
+      "frame": {
+        "x": 0,
+        "y": 1228,
+        "w": 221,
+        "h": 307
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 221,
+        "h": 307
+      },
+      "sourceSize": {
+        "w": 221,
+        "h": 307
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "https://free-tex-packer.org",
+    "version": "0.7.0",
+    "image": "texture.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 229,
+      "h": 1535
+    },
+    "scale": 1
+  }
+}
