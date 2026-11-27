@@ -55,38 +55,35 @@ class Bird(pygame.sprite.Sprite):
         self.image = self.sprites[self.colour] #then this part takes that random choice to load up the corresponding image
         self.mask = pygame.mask.from_surface(self.image) 
 
-        self.rect = self.image.get_rect() 
-        self.rect[0] = SCREEN_WIDTH / 6 
-        self.rect[1] = SCREEN_HEIGHT / 2 
+        self.rect = self.image.get_rect() #This calls on my sprite to spawn a hitbox at the start of the game
+        self.rect[0] = SCREEN_WIDTH / 6 #this places my sprite at the left of the screen, giving time to see the pipes ahead
+        self.rect[1] = SCREEN_HEIGHT / 2 #This places my sprite in the middle of the screen vertically, assuring that its in a playable position.
 
-    def update(self): 
-        self.current_image = (self.current_image + 1) % 3  
-        self.image = self.images[self.current_image] 
+    def change_colour(self):
+        other_colours = [c for c in self.sprites.keys() if c != self.colour] #These two lines pick a new colour that isn't the previous one
+        self.colour = random.choice(other_colours)
+        
+        self.image = self.sprites[self.colour]
+        self.mask = pygame.mask.from_surface(self.image) #this swaps the images and refreshes the hitbox
+    
+    def update(self): #from here we deleted the cycling through wing flapping animation as our goose doesnt do that, and we just kept gravity and the upwards movement the same
         self.speed += GRAVITY
 
         #UPDATE HEIGHT
         self.rect[1] += self.speed 
 
-    def bump(self):
+    def bump(self): #This section makes our goose jump up when the spacebar is pressed, we want to keep this function exactly as is 
         self.speed = -SPEED 
 
     def begin(self): 
-        self.current_image = (self.current_image + 1) % 3 
-        self.image = self.images[self.current_image]
-"""In sum, ln 26 defines Bird as a Pygame sprite. 
-ln 28 _init_ sets up a new bird, it loads the three flap images (upflap, midflap, downflap), sets the starting speeds (jump) and images, 
-and sets up bird's collision shape and position (rectangular hitbox).
-ln 45 update(self) cycles through the images we loaded in ln 28, adds gravity to bird's speed, and moves bird vertically.
-ln 53 bump(self) gives flap a negative (up) speed when player clicks Space or Up. (ln 28 sets speed, ln 53 assigns jump speed to click) 
-ln 56 begin(self) cycles bird's pictures on start screen. But bird not moving, just start screen animation. (TC)
-"""
+        pass #I put pass here because I dont need this function anymore but also don't want the game to crash if i forget to change the line where it is called upon 
 
 class Pipe(pygame.sprite.Sprite): 
 
     def __init__(self, inverted, xpos, ysize): 
         pygame.sprite.Sprite.__init__(self) 
 
-        self. image = pygame.image.load('assets/sprites/pipe-green.png').convert_alpha() 
+        self.image = pygame.image.load('assets/sprites/pipe-green.png').convert_alpha() 
         self.image = pygame.transform.scale(self.image, (PIPE_WIDTH, PIPE_HEIGHT))
 
 
