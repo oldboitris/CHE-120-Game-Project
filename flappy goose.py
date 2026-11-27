@@ -34,36 +34,57 @@ pygame.mixer.init()
 
 class Bird(pygame.sprite.Sprite): 
 
-    def __init__(self): 
+    def __init__(self): # this makes the bird self spawn, we want to keep this
         pygame.sprite.Sprite.__init__(self) 
 
-        self.images =  [pygame.image.load('assets/sprites/bluebird-upflap.png').convert_alpha(),
-                        pygame.image.load('assets/sprites/bluebird-midflap.png').convert_alpha(),
-                        pygame.image.load('assets/sprites/bluebird-downflap.png').convert_alpha()] 
+        sheet = pygame.image.load('assets/sprites/texture.png').convert_alpha() #this loads the spritesheet file
+        
+       goose_coords_colours = {
+           "purple": (0, 0, 229, 307), #(x, y, width, height)
+           "blue": (0, 307, 223, 307), 
+           "yellow": (0, 614, 223, 307),
+           "green": (0, 921, 221, 307),
+           "orange": (0, 1228, 221, 307)
+       }
+        # set a target size to make them fit the flappy bird pipes
+        target_size = (35, 48)
+
+        #now we have everything set up to define our geese, so we make a dictionary to slice and resize the sprites
+        #
+        self.sprites = {
+            colour: pygame.transform.scale(sheet.subsurface(coords), #This first part takes coords, crops out the excess and shrinks it down to the target size
+            for colour, coords in goose_coords_colours.items() #this part is a loop that grabs each item (colour) and repeats the value transformation for each sprite
+        }
+        
         self.speed = SPEED
 
-        self.current_image = 0 
-        self.image = pygame.image.load('assets/sprites/bluebird-upflap.png').convert_alpha() 
+        #pick a random colour upon starting up the game by turning each item from the self.sprites into a list, then picks one name randomly
+        self.colour = random.choice(list(self.sprites.keys())) 
+        self.image = self.sprites[self.colour] #then this part takes that random choice to load up the corresponding image
         self.mask = pygame.mask.from_surface(self.image) 
 
-        self.rect = self.image.get_rect() 
-        self.rect[0] = SCREEN_WIDTH / 6 
-        self.rect[1] = SCREEN_HEIGHT / 2 
+        self.rect = self.image.get_rect() #This calls on my sprite to spawn a hitbox at the start of the game
+        self.rect[0] = SCREEN_WIDTH / 6 #this places my sprite at the left of the screen, giving time to see the pipes ahead
+        self.rect[1] = SCREEN_HEIGHT / 2 #This places my sprite in the middle of the screen vertically, assuring that its in a playable position.
 
-    def update(self): 
-        self.current_image = (self.current_image + 1) % 3  
-        self.image = self.images[self.current_image] 
+    def change_colour(self):
+        other_colours = [c for c in self.sprites.keys() if c != self.colour] #These two lines pick a new colour that isn't the previous one
+        self.colour = random.choice(other_colours)
+        
+        self.image = self.sprites[self.colour]
+        self.mask = pygame.mask.from_surface(self.image) #this swaps the images and refreshes the hitbox
+    
+    def update(self): #from here we deleted the cycling through wing flapping animation as our goose doesnt do that, and we just kept gravity and the upwards movement the same
         self.speed += GRAVITY
 
         #UPDATE HEIGHT
         self.rect[1] += self.speed 
 
-    def bump(self):
+    def bump(self): #This section makes our goose jump up when the spacebar is pressed, we want to keep this function exactly as is 
         self.speed = -SPEED 
 
     def begin(self): 
-        self.current_image = (self.current_image + 1) % 3 
-        self.image = self.images[self.current_image]
+        pass #I put pass here because I dont need this function anymore but also don't want the game to crash if i forget to change the line where it is called upon 
 
 
 class Pipe(pygame.sprite.Sprite): 
@@ -87,6 +108,7 @@ class Pipe(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect[0] = xpos
         self.rect[1] = ypos
+        self.passed = False #this will be used in the colour change of the bird as it passes the pipe
 
         # Step 5: Create the collision mask from the resized image
         self.mask = pygame.mask.from_surface(self.image)
@@ -212,6 +234,13 @@ while True:
 
         pipe_group.add(pipes[0])
         pipe_group.add(pipes[1])
+        
+    for pipe in pipe_group:
+        if not pipe.passed and pipe.rect.right < bird.rect.left: #this checks if the pipe.passed function in the pipe class still reads false
+            for p in pipe group:
+            if p.rect.x == pipe.rect.x: #this loop makes sure that the passed switch is only flipped once, as the bird passes all pipe parts at the same time (since their x position is equal)
+                p.passed = True #this states that if we pass the x position of the pipe that we have passed the pipe
+            bird.change_colour() #this calls for the bird to change colour since we've passed the pipe
 
     bird_group.update()
     ground_group.update()
